@@ -177,3 +177,44 @@ export const getCalorieStatus = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
+// กราฟวงกลม
+export const getDailyMacros = async (req: Request, res: Response) => {
+  const { userId } = req.params; // ดึง user id จาก URL
+  try {
+    const [rows]: any = await db.query(
+      `
+      SELECT 
+          SUM(f.protein_gram) AS total_protein,
+          SUM(f.fat_gram) AS total_fat,
+          SUM(f.carbohydrate_gram) AS total_carbohydrate
+      FROM Meals m
+      JOIN MealDetails md ON m.meal_id = md.meal_id
+      JOIN Foods f ON md.food_id = f.food_id
+      WHERE m.user_id = ? 
+        AND m.date = CURDATE();
+      `,
+      [userId]
+    );
+
+    // ถ้าไม่มีข้อมูลเลย (ยังไม่กินอะไร)
+    if (!rows[0].total_protein && !rows[0].total_fat && !rows[0].total_carbohydrate) {
+      return res.status(200).json({
+        message: "No meal data for today",
+        protein: 0,
+        fat: 0,
+        carbohydrate: 0
+      });
+    }
+
+    res.json({
+      message: "Daily macros retrieved successfully",
+      protein: rows[0].total_protein || 0,
+      fat: rows[0].total_fat || 0,
+      carbohydrate: rows[0].total_carbohydrate || 0
+    });
+  } catch (error) {
+    console.error("Error fetching daily macros:", error);
+    res.status(500).json({ message: "Server error", error });
+  }
+};

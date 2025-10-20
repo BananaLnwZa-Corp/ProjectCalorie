@@ -1,8 +1,12 @@
 // lib/src/home/home.dart
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mobile/src/componants/activityfactor.dart';
 import '../componants/navbaruser.dart';
 import '../componants/Kcalbar.dart';
+import '../componants/camera.dart';
+import '../componants/activityfactor.dart';
+import '../componants/piegraph.dart'; // ← เพิ่มบรรทัดนี้
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -63,38 +67,37 @@ class _HomeScreenState extends State<HomeScreen> {
                                 current: _currentCalories,
                                 target: _targetCalories,
                               ),
-                              // เพิ่มเนื้อหาอื่นqๆ ด้านซ้ายได้ที่นี่
+                              NutritionPieChartComponent(
+                                carbs: 250,
+                                fats: 70,
+                                protein: 150,
+                              ),
                             ],
                           ),
                         ),
                       ),
-                      
-                      // เส้นแบ่ง (optional)
-                      Container(
-                        width: 3,
-                        color: Colors.black.withOpacity(0.1),
-                      ),
+
                       
                       // ฝั่งขวา - ว่างไว้สำหรับเนื้อหาอื่น
                       Expanded(
                         flex: 1, // อีกครึ่งหนึ่ง
                         child: Container(
                           padding: const EdgeInsets.all(16.0),
-                          child: Center(
-                            child: Text(
-                              'Right Side Content',
-                              style: TextStyle(
-                                fontSize: 18,
-                                color: Colors.grey[600],
-                                fontFamily: 'TA8bit',
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              ActivityFactorButton(
                               ),
-                            ),
+                              // เพิ่มเนื้อหาอื่นqๆ ด้านซ้ายได้ที่นี่
+                            ],
                           ),
                         ),
                       ),
                     ],
                   ),
           ),
+
+            CameraIconButton()
         ],
       ),
     );

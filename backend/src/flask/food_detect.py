@@ -9,13 +9,16 @@ from dotenv import load_dotenv
 import os
 from datetime import datetime
 from pathlib import Path
+import jwt
+from functools import wraps
+from flask import request, jsonify
 
-# โหลด .env จาก backend root (C:\Users\User\Documents\ProjectCalorie\backend\.env)
-PROJECT_ROOT = Path(__file__).resolve().parents[2]  # .../ProjectCalorie/backend
+# โหลด .env จาก backend root
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
 load_dotenv(str(PROJECT_ROOT / '.env'))
 
 # ============================================
-# Database Config
+# Configuration
 # ============================================
 
 DB_CONFIG = {
@@ -25,6 +28,11 @@ DB_CONFIG = {
     'database': os.getenv('DB_NAME'),
     'port': int(os.getenv('DB_PORT', '3306'))
 }
+
+JWT_SECRET = os.getenv('JWT_SECRET')
+
+if not JWT_SECRET:
+    raise ValueError("JWT_SECRET is not set in .env file!")
 
 # ============================================
 # Load Mappings
@@ -63,6 +71,8 @@ model.load_state_dict(checkpoint, strict=False)
 model.to(device)
 model.eval()
 
+print(f"✅ Food model loaded on {device}")
+
 # ============================================
 # Image Preprocessing
 # ============================================
@@ -72,6 +82,69 @@ transform = transforms.Compose([
     transforms.ToTensor(),
     transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
 ])
+
+# ============================================
+# JWT Authentication
+# ============================================
+
+def verify_token(token):
+    """
+    ตรวจสอบ JWT token และดึง user_id
+    
+    Args:
+        token: JWT token string (รูปแบบ "Bearer <token>" หรือ "<token>")
+    
+    Returns:
+        user_id (int) หรือ None ถ้า token ไม่ถูกต้อง
+    """
+    try:
+        if not token:
+            return None
+        
+        # ถ้ามี "Bearer " ให้ตัดออก
+        if token.startswith('Bearer '):
+            token = token[7:]
+        
+        # Verify token (ใช้ algorithm เดียวกับ Node.js = HS256)
+        payload = jwt.decode(token, JWT_SECRET, algorithms=['HS256'])
+        
+        # ดึง userId จาก payload (ตาม Node.js controller ของคุณ)
+        user_id = payload.get('userId')
+        return user_id
+        
+    except jwt.ExpiredSignatureError:
+        print("Token expired")
+        return None
+    except jwt.InvalidTokenError as e:
+        print(f"Invalid token: {e}")
+        return None
+
+
+def require_auth(f):
+    """
+    Decorator สำหรับ protect routes
+    ต้องมี valid JWT token ถึงจะเข้าถึง route ได้
+    """
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        # ดึง token จาก Authorization header
+        token = request.headers.get('Authorization')
+        
+        # Verify token
+        user_id = verify_token(token)
+        
+        if not user_id:
+            return jsonify({
+                'error': 'Unauthorized',
+                'message': 'Invalid or missing token'
+            }), 401
+        
+        # เพิ่ม user_id ใน request object เพื่อให้ route อื่นใช้ได้
+        request.user_id = user_id
+        
+        return f(*args, **kwargs)
+    
+    return decorated_function
 
 # ============================================
 # Database Functions
@@ -98,23 +171,33 @@ def get_nutrition_data(food_name):
         return None
 
 
-def save_meal_to_db(data):
-    """บันทึกมื้อาหารลงฐานข้อมูล"""
+def save_meal_to_db(user_id, data):
+    """
+    บันทึกมื้อาหารลงฐานข้อมูล (Meals + MealDetails + AIAnalysis)
+    
+    Args:
+        user_id: ID ของผู้ใช้ (มาจาก JWT token)
+        data: ข้อมูลที่ต้องการบันทึก (food_id, confidence_score, meal_datetime)
+    """
+    conn = None
     try:
-        user_id = data.get('user_id')
         food_id = data.get('food_id')
         meal_datetime = data.get('meal_datetime')
+        confidence_score = data.get('confidence_score')
         
-        if not user_id or not food_id:
-            return {'error': 'user_id and food_id are required'}
+        if not food_id:
+            return {'error': 'food_id is required'}
         
         # Default เวลาปัจจุบัน
         if not meal_datetime:
-            meal_datetime = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        
-        # แยกวันที่
-        dt = datetime.strptime(meal_datetime, '%Y-%m-%d %H:%M:%S')
-        meal_date = dt.strftime('%Y-%m-%d')
+            now = datetime.now()
+            meal_date = now.strftime('%Y-%m-%d')
+            meal_time = now.strftime('%H:%M:%S')
+        else:
+            # แยก date และ time จาก meal_datetime
+            dt = datetime.strptime(meal_datetime, '%Y-%m-%d %H:%M:%S')
+            meal_date = dt.strftime('%Y-%m-%d')
+            meal_time = dt.strftime('%H:%M:%S')
         
         conn = mysql.connector.connect(**DB_CONFIG)
         cursor = conn.cursor()
@@ -133,26 +216,42 @@ def save_meal_to_db(data):
         
         # Step 2: Insert MealDetail
         insert_detail_query = """
-            INSERT INTO MealDetails (meal_id, food_id, meal_datetime)
+            INSERT INTO MealDetails (meal_id, food_id, meal_time)
             VALUES (%s, %s, %s)
         """
-        cursor.execute(insert_detail_query, (meal_id, food_id, meal_datetime))
+        cursor.execute(insert_detail_query, (meal_id, food_id, meal_time))
         meal_detail_id = cursor.lastrowid
+        
+        # Step 3: Insert AIAnalysis (ถ้ามี confidence_score)
+        analysis_id = None
+        if confidence_score is not None:
+            insert_analysis_query = """
+                INSERT INTO AIAnalysis (user_id, food_id, confidence_score)
+                VALUES (%s, %s, %s)
+            """
+            cursor.execute(insert_analysis_query, (user_id, food_id, confidence_score))
+            analysis_id = cursor.lastrowid
         
         conn.commit()
         cursor.close()
         conn.close()
         
-        return {
+        result = {
             'success': True,
             'meal_id': meal_id,
             'meal_detail_id': meal_detail_id,
             'message': 'Meal saved successfully'
         }
         
+        if analysis_id:
+            result['analysis_id'] = analysis_id
+        
+        return result
+        
     except Exception as e:
         if conn:
             conn.rollback()
+            conn.close()
         print(f"Error: {e}")
         return {'error': str(e)}
 

@@ -6,40 +6,52 @@ import NavBarUser from '../pages/componants/NavBarUser';
 export default function MainPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#6fa85e] via-[#8bc273] to-[#a8d48f]">
-      {/* NavBar */}
+      {/* 🔹 NavBar เต็มความกว้างด้านบน */}
       <NavBarUser />
-      
-      {/* Main Content Area - ว่างไว้สำหรับเพิ่มเนื้อหาในภายหลัง */}
-      <div className="container mx-auto px-4 py-8">
-        <div 
-          className="bg-white border-8 border-black p-8 text-center"
-          style={{ 
-            boxShadow: '12px 12px 0px rgba(0,0,0,0.3)',
-            imageRendering: 'pixelated'
-          }}
-        >
-          <h1 
-            className="text-3xl font-bold text-gray-800 mb-4"
-            style={{ 
-              fontFamily: 'monospace',
-              textShadow: '2px 2px 0px rgba(0,0,0,0.2)'
-            }}
-          >
-            ◆ MAIN PAGE ◆
-          </h1>
-          
-          <p 
-            className="text-gray-600"
-            style={{ fontFamily: 'monospace' }}
-          >
-            Content will be added here...
-          </p>
-          
-          {/* Pixel Decorations */}
-          <div className="flex justify-center gap-2 mt-6">
-            <div className="w-4 h-4 bg-[#6fa85e]"></div>
-            <div className="w-4 h-4 bg-[#8bc273]"></div>
-            <div className="w-4 h-4 bg-[#a8d48f]"></div>
+
+      {/* 🔹 Main Area (แบ่งซ้าย-ขวาหลัง Navbar เท่านั้น) */}
+      <div className="flex min-h-[calc(100vh-64px)]"> 
+        {/* ↑ สมมติ NavBar สูง ~64px ปรับตามจริงได้ */}
+
+        {/* ฝั่งซ้าย */}
+        <div className="w-1/2 flex items-center justify-center border-r-8 border-black bg-[#e5f4de]">
+          <div className="text-center p-10">
+            <h1
+              className="text-3xl font-bold text-gray-800 mb-4"
+              style={{
+                fontFamily: 'monospace',
+                textShadow: '2px 2px 0px rgba(0,0,0,0.2)',
+              }}
+            >
+              ◀ LEFT SIDE
+            </h1>
+            <p
+              className="text-gray-700"
+              style={{ fontFamily: 'monospace' }}
+            >
+              (พื้นที่ฝั่งซ้าย — เช่น เมนู, ข้อมูลผู้ใช้)
+            </p>
+          </div>
+        </div>
+
+        {/* ฝั่งขวา */}
+        <div className="w-1/2 flex items-center justify-center bg-[#f4ffe5]">
+          <div className="text-center p-10">
+            <h1
+              className="text-3xl font-bold text-gray-800 mb-4"
+              style={{
+                fontFamily: 'monospace',
+                textShadow: '2px 2px 0px rgba(0,0,0,0.2)',
+              }}
+            >
+              RIGHT SIDE ▶
+            </h1>
+            <p
+              className="text-gray-700"
+              style={{ fontFamily: 'monospace' }}
+            >
+              (พื้นที่ฝั่งขวา — เช่น เนื้อหา, ตาราง, หรือกราฟ)
+            </p>
           </div>
         </div>
       </div>

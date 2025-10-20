@@ -1,6 +1,7 @@
 // components/calorie_progress_bar.dart
 import 'package:flutter/material.dart';
 
+
 class Kcalbar extends StatelessWidget {
   final double current;        // แคลอรี่ที่กินไปแล้ว
   final double target;         // แคลอรี่เป้าหมาย

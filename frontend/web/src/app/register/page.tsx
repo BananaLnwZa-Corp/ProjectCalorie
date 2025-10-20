@@ -26,6 +26,94 @@ export default function RegisterPage({ onNavigateToLogin }: RegisterPageProps) {
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+<<<<<<< HEAD
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value, type } = e.target;
+    const checked = (e.target as HTMLInputElement).checked;
+    
+    setFormData(prev => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : value
+    }));
+    
+    // Clear error when user types
+    if (error) setError('');
+  };
+
+  const handleRegister = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+    
+    // Validation
+    if (formData.password !== formData.confirmPassword) {
+      setError('Password ไม่ตรงกัน!');
+      return;
+    }
+    
+    if (formData.password.length < 6) {
+      setError('Password ต้องมีอย่างน้อย 6 ตัวอักษร');
+      return;
+    }
+
+    // Validate numbers
+    const age = parseInt(formData.age);
+    const height = parseFloat(formData.height);
+    const weight = parseFloat(formData.weight);
+
+    if (isNaN(age) || age < 10 || age > 120) {
+      setError('กรุณากรอกอายุที่ถูกต้อง (10-120 ปี)');
+      return;
+    }
+
+    if (isNaN(height) || height < 100 || height > 250) {
+      setError('กรุณากรอกส่วนสูงที่ถูกต้อง (100-250 cm)');
+      return;
+    }
+
+    if (isNaN(weight) || weight < 30 || weight > 300) {
+      setError('กรุณากรอกน้ำหนักที่ถูกต้อง (30-300 kg)');
+      return;
+    }
+    
+    if (!formData.agreedToTerms) {
+      setError('กรุณายอมรับข้อกำหนดและเงื่อนไข');
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      // เตรียมข้อมูลสำหรับส่ง API
+      const registerData: RegisterData = {
+        username: formData.username.trim(),
+        email: formData.email.trim(),
+        phone_number: formData.phone.trim(),
+        password: formData.password,
+        age: age,
+        gender: formData.gender,
+        height: height,
+        weight: weight,
+        goal: formData.goal,
+      };
+
+      // เรียก API
+      const response = await authAPI.register(registerData);
+      
+      console.log('Register success:', response);
+      
+      // แสดง Success Modal
+      setShowSuccessModal(true);
+      
+    } catch (err: any) {
+      console.error('Register error:', err);
+      setError(err.message || 'เกิดข้อผิดพลาดในการสมัครสมาชิก');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+=======
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target;
@@ -141,6 +229,7 @@ export default function RegisterPage({ onNavigateToLogin }: RegisterPageProps) {
     }
   };
 
+>>>>>>> 2e246484e1c1bcc721d76ff635b5424660f3943e
   const handleSuccessModalClose = () => {
     setShowSuccessModal(false);
     
@@ -148,7 +237,11 @@ export default function RegisterPage({ onNavigateToLogin }: RegisterPageProps) {
     if (onNavigateToLogin) {
       onNavigateToLogin();
     } else {
+<<<<<<< HEAD
+      window.location.href = '/Authen/login';
+=======
       window.location.href = '/pages/login';
+>>>>>>> 2e246484e1c1bcc721d76ff635b5424660f3943e
     }
   };
 
@@ -195,7 +288,11 @@ export default function RegisterPage({ onNavigateToLogin }: RegisterPageProps) {
                   textShadow: '3px 3px 0px rgba(0,0,0,0.3)'
                 }}
               >
+<<<<<<< HEAD
+                ◆ CREATE PLAYER ◆
+=======
                 ◆ CREATE ACCOUNT ◆
+>>>>>>> 2e246484e1c1bcc721d76ff635b5424660f3943e
               </h2>
             </div>
 
@@ -209,7 +306,11 @@ export default function RegisterPage({ onNavigateToLogin }: RegisterPageProps) {
                   <img
                     src="/pic/logoja.png"
                     alt="Logo"
+<<<<<<< HEAD
+                    className="w-24 h-24 object-contain"
+=======
                     className="w-32 h-32 object-contain"
+>>>>>>> 2e246484e1c1bcc721d76ff635b5424660f3943e
                     style={{ imageRendering: 'pixelated' }}
                   />
                 </div>
@@ -356,7 +457,11 @@ export default function RegisterPage({ onNavigateToLogin }: RegisterPageProps) {
                     className="text-lg font-bold text-gray-800 mb-3"
                     style={{ fontFamily: 'monospace' }}
                   >
+<<<<<<< HEAD
+                    ▶ PLAYER STATS
+=======
                     ▶ PERSONAL INFO
+>>>>>>> 2e246484e1c1bcc721d76ff635b5424660f3943e
                   </h3>
 
                   <div className="space-y-3">
@@ -398,8 +503,14 @@ export default function RegisterPage({ onNavigateToLogin }: RegisterPageProps) {
                           style={{ fontFamily: 'monospace' }}
                         >
                           <option value="">Select...</option>
+<<<<<<< HEAD
+                          <option value="male">♂ MALE</option>
+                          <option value="female">♀ FEMALE</option>
+                          <option value="other">⚪ OTHER</option>
+=======
                           <option value="male">MALE</option>
                           <option value="female">FEMALE</option>
+>>>>>>> 2e246484e1c1bcc721d76ff635b5424660f3943e
                         </select>
                       </div>
                     </div>
@@ -410,12 +521,20 @@ export default function RegisterPage({ onNavigateToLogin }: RegisterPageProps) {
                           className="block text-xs font-bold text-gray-700 mb-1"
                           style={{ fontFamily: 'monospace' }}
                         >
+<<<<<<< HEAD
+                          HEIGHT (CM) *
+=======
                           HEIGHT *
+>>>>>>> 2e246484e1c1bcc721d76ff635b5424660f3943e
                         </label>
                         <input
                           type="number"
                           name="height"
+<<<<<<< HEAD
+                          placeholder="150"
+=======
                           placeholder="(CM)"
+>>>>>>> 2e246484e1c1bcc721d76ff635b5424660f3943e
                           value={formData.height}
                           onChange={handleChange}
                           required
@@ -432,12 +551,20 @@ export default function RegisterPage({ onNavigateToLogin }: RegisterPageProps) {
                           className="block text-xs font-bold text-gray-700 mb-1"
                           style={{ fontFamily: 'monospace' }}
                         >
+<<<<<<< HEAD
+                          WEIGHT (KG) *
+=======
                           WEIGHT *
+>>>>>>> 2e246484e1c1bcc721d76ff635b5424660f3943e
                         </label>
                         <input
                           type="number"
                           name="weight"
+<<<<<<< HEAD
+                          placeholder="50"
+=======
                           placeholder="(KG)"
+>>>>>>> 2e246484e1c1bcc721d76ff635b5424660f3943e
                           value={formData.weight}
                           onChange={handleChange}
                           required
@@ -466,9 +593,15 @@ export default function RegisterPage({ onNavigateToLogin }: RegisterPageProps) {
                         style={{ fontFamily: 'monospace' }}
                       >
                         <option value="">Select goal...</option>
+<<<<<<< HEAD
+                        <option value="lose_weight">📉 LOSE WEIGHT</option>
+                        <option value="maintain">➡️ MAINTAIN</option>
+                        <option value="gain_weight">📈 GAIN WEIGHT</option>
+=======
                         <option value="lose weight">LOSE WEIGHT</option>
                         <option value="maintain weight">MAINTAIN WEIGH</option>
                         <option value="gain weight">GAIN WEIGHT</option>
+>>>>>>> 2e246484e1c1bcc721d76ff635b5424660f3943e
                       </select>
                     </div>
                   </div>
@@ -571,7 +704,11 @@ export default function RegisterPage({ onNavigateToLogin }: RegisterPageProps) {
               {/* Pixel Art Header Bar */}
               <div className="bg-[#6fa85e] border-b-4 border-black -mx-8 -mt-8 mb-6 py-3">
                 <h3 className="text-2xl font-bold text-white tracking-wider" style={{ textShadow: '3px 3px 0px rgba(0,0,0,0.3)', fontFamily: 'monospace' }}>
+<<<<<<< HEAD
+                  ★ PLAYER CREATED! ★
+=======
                   ★ ACCOUNT CREATED! ★
+>>>>>>> 2e246484e1c1bcc721d76ff635b5424660f3943e
                 </h3>
               </div>
 
@@ -680,16 +817,36 @@ export default function RegisterPage({ onNavigateToLogin }: RegisterPageProps) {
               <div className="space-y-4 text-gray-700" style={{ fontFamily: 'monospace', fontSize: '13px' }}>
                 <section>
                   <h3 className="text-base font-bold text-gray-800 mb-2">
+<<<<<<< HEAD
+                    1. DATA COLLECTION
+                  </h3>
+                  <p className="text-sm leading-relaxed">
+                    CAL-DEFICITS collects personal data such as username, email, phone number, 
+                    and health information for calorie tracking services.
+=======
                     1. ข้อมูลที่เราเก็บรวบรวม
                   </h3>
                   <p className="text-sm leading-relaxed">
                     CAL-DEFICITS เก็บรวบรวมข้อมูลส่วนบุคคลของคุณ เช่น ชื่อผู้ใช้ อีเมล หมายเลขโทรศัพท์ 
                     และข้อมูลสุขภาพที่เกี่ยวข้องกับการคำนวณแคลอรี่ เพื่อใช้ในการให้บริการและปรับปรุงประสบการณ์การใช้งาน
+>>>>>>> 2e246484e1c1bcc721d76ff635b5424660f3943e
                   </p>
                 </section>
 
                 <section>
                   <h3 className="text-base font-bold text-gray-800 mb-2">
+<<<<<<< HEAD
+                    2. DATA USAGE
+                  </h3>
+                  <p className="text-sm leading-relaxed">
+                    We use your data to:
+                  </p>
+                  <ul className="list-disc list-inside text-sm space-y-1 ml-4 mt-2">
+                    <li>Calculate and track calories</li>
+                    <li>Manage user accounts</li>
+                    <li>Improve our services</li>
+                    <li>Send notifications</li>
+=======
                     2. การใช้ข้อมูล
                   </h3>
                   <p className="text-sm leading-relaxed">
@@ -700,31 +857,55 @@ export default function RegisterPage({ onNavigateToLogin }: RegisterPageProps) {
                     <li>สร้างและจัดการบัญชีผู้ใช้งาน</li>
                     <li>ปรับปรุงและพัฒนาบริการของเรา</li>
                     <li>ส่งการแจ้งเตือนและข้อมูลที่เกี่ยวข้อง</li>
+>>>>>>> 2e246484e1c1bcc721d76ff635b5424660f3943e
                   </ul>
                 </section>
 
                 <section>
                   <h3 className="text-base font-bold text-gray-800 mb-2">
+<<<<<<< HEAD
+                    3. DATA PROTECTION
+                  </h3>
+                  <p className="text-sm leading-relaxed">
+                    We use appropriate security measures to protect your personal data from unauthorized access.
+                    All data is encrypted and stored securely.
+=======
                     3. การปกป้องข้อมูล
                   </h3>
                   <p className="text-sm leading-relaxed">
                     เราใช้มาตรการรักษาความปลอดภัยที่เหมาะสมเพื่อปกป้องข้อมูลส่วนบุคคลของคุณจากการเข้าถึงการใช้ 
                     หรือการเปิดเผยโดยไม่ได้รับอนุญาต ข้อมูลทั้งหมดจะถูกเข้ารหัสและจัดเก็บอย่างปลอดภัย
+>>>>>>> 2e246484e1c1bcc721d76ff635b5424660f3943e
                   </p>
                 </section>
 
                 <section>
                   <h3 className="text-base font-bold text-gray-800 mb-2">
+<<<<<<< HEAD
+                    4. DATA SHARING
+                  </h3>
+                  <p className="text-sm leading-relaxed">
+                    We will not sell, rent, or share your personal data with third parties,
+                    except as required by law or with your consent.
+=======
                     4. การแบ่งปันข้อมูล
                   </h3>
                   <p className="text-sm leading-relaxed">
                     เราจะไม่ขาย เช่า หรือแบ่งปันข้อมูลส่วนบุคคลของคุณให้กับบุคคลที่สาม 
                     ยกเว้นในกรณีที่จำเป็นตามกฎหมายหรือได้รับความยินยอมจากคุณ
+>>>>>>> 2e246484e1c1bcc721d76ff635b5424660f3943e
                   </p>
                 </section>
 
                 <section>
                   <h3 className="text-base font-bold text-gray-800 mb-2">
+<<<<<<< HEAD
+                    5. USER RIGHTS
+                  </h3>
+                  <p className="text-sm leading-relaxed">
+                    You have the right to access, modify, or delete your personal data at any time.
+                    Contact us via email or account settings.
+=======
                     5. สิทธิของผู้ใช้งาน
                   </h3>
                   <p className="text-sm leading-relaxed">
@@ -740,11 +921,22 @@ export default function RegisterPage({ onNavigateToLogin }: RegisterPageProps) {
                   <p className="text-sm leading-relaxed">
                     เราอาจปรับปรุงนโยบายความเป็นส่วนตัวนี้เป็นครั้งคราว 
                     การเปลี่ยนแปลงจะมีผลทันทีเมื่อเผยแพร่บนเว็บไซต์
+>>>>>>> 2e246484e1c1bcc721d76ff635b5424660f3943e
                   </p>
                 </section>
 
                 <section className="pt-4 border-t-4 border-dashed border-gray-300">
                   <h3 className="text-base font-bold text-gray-800 mb-2">
+<<<<<<< HEAD
+                    CONTACT US
+                  </h3>
+                  <p className="text-sm leading-relaxed">
+                    For privacy questions, contact us at:
+                  </p>
+                  <p className="text-sm mt-2 font-bold">
+                    EMAIL: support@cal-deficits.com<br />
+                    EFFECTIVE DATE: OCT 12, 2025
+=======
                     ติดต่อเรา
                   </h3>
                   <p className="text-sm leading-relaxed">
@@ -753,6 +945,7 @@ export default function RegisterPage({ onNavigateToLogin }: RegisterPageProps) {
                   <p className="text-sm mt-2">
                     <strong>Email:</strong> support@cal-deficits.com<br />
                     <strong>วันที่มีผลบังคับใช้:</strong> 12 ตุลาคม 2025
+>>>>>>> 2e246484e1c1bcc721d76ff635b5424660f3943e
                   </p>
                 </section>
               </div>

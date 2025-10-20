@@ -1,13 +1,8 @@
-// app/profile/page.tsx
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import NavBarUser from '../pages/componants/NavBarUser';
 
 export default function ProfilePage() {
-  const router = useRouter();
-  
   // User data
   const [username] = useState('MyPeach');
   const [weight, setWeight] = useState('65');
@@ -89,7 +84,11 @@ export default function ProfilePage() {
   };
 
   const handleLogout = () => {
-    router.push('/login');
+    console.log('Logged out');
+  };
+
+  const handleBack = () => {
+    console.log('Back');
   };
 
   return (
@@ -129,72 +128,9 @@ export default function ProfilePage() {
       <div className="absolute top-1/3 right-12 w-7 h-7 bg-blue-300 border-4 border-black animate-bounce shadow-lg" style={{ animationDelay: '1.5s', animationDuration: '2s' }}></div>
       <div className="absolute bottom-24 right-32 w-8 h-8 bg-pink-300 border-4 border-black animate-bounce shadow-lg" style={{ animationDelay: '0.8s', animationDuration: '3s' }}></div>
       <div className="absolute top-1/2 left-8 w-6 h-6 bg-purple-300 border-4 border-black animate-bounce shadow-lg" style={{ animationDelay: '0.3s', animationDuration: '2.8s' }}></div>
-      
-      {/* Large Decorative Shapes */}
-      <div 
-        className="absolute top-0 right-0 w-40 h-40 bg-[#8bc273] opacity-25 border-8 border-[#6fa85e]"
-        style={{
-          clipPath: 'polygon(100% 0, 100% 100%, 0 0)',
-        }}
-      ></div>
-      <div 
-        className="absolute bottom-0 left-0 w-48 h-48 bg-[#a8d88e] opacity-25 border-8 border-[#8bc273]"
-        style={{
-          clipPath: 'polygon(0 100%, 100% 100%, 0 0)',
-        }}
-      ></div>
-
-      {/* Pixel Clouds */}
-      <div className="absolute top-20 left-1/4">
-        <div className="flex gap-0">
-          <div className="w-4 h-4 bg-white opacity-80 border border-gray-300"></div>
-          <div className="w-4 h-4 bg-white opacity-80 border border-gray-300"></div>
-          <div className="w-4 h-4 bg-white opacity-80 border border-gray-300"></div>
-        </div>
-        <div className="flex gap-0 -mt-4 ml-4">
-          <div className="w-4 h-4 bg-white opacity-80 border border-gray-300"></div>
-          <div className="w-4 h-4 bg-white opacity-80 border border-gray-300"></div>
-        </div>
-      </div>
-
-      <div className="absolute bottom-48 right-1/4">
-        <div className="flex gap-0">
-          <div className="w-5 h-5 bg-white opacity-70 border border-gray-300"></div>
-          <div className="w-5 h-5 bg-white opacity-70 border border-gray-300"></div>
-          <div className="w-5 h-5 bg-white opacity-70 border border-gray-300"></div>
-          <div className="w-5 h-5 bg-white opacity-70 border border-gray-300"></div>
-        </div>
-        <div className="flex gap-0 -mt-5 ml-5">
-          <div className="w-5 h-5 bg-white opacity-70 border border-gray-300"></div>
-          <div className="w-5 h-5 bg-white opacity-70 border border-gray-300"></div>
-        </div>
-      </div>
-
-      {/* Pixel Stars */}
-      <div className="absolute top-32 right-1/3">
-        <div className="relative w-8 h-8">
-          <div className="absolute top-0 left-1/2 w-2 h-2 bg-yellow-200 border-2 border-yellow-400 -ml-1"></div>
-          <div className="absolute bottom-0 left-1/2 w-2 h-2 bg-yellow-200 border-2 border-yellow-400 -ml-1"></div>
-          <div className="absolute left-0 top-1/2 w-2 h-2 bg-yellow-200 border-2 border-yellow-400 -mt-1"></div>
-          <div className="absolute right-0 top-1/2 w-2 h-2 bg-yellow-200 border-2 border-yellow-400 -mt-1"></div>
-          <div className="absolute top-1/2 left-1/2 w-3 h-3 bg-yellow-300 border-2 border-yellow-500 -ml-1.5 -mt-1.5"></div>
-        </div>
-      </div>
-
-      <div className="absolute bottom-1/3 left-1/4">
-        <div className="relative w-6 h-6">
-          <div className="absolute top-0 left-1/2 w-1.5 h-1.5 bg-white border border-gray-300 -ml-0.5"></div>
-          <div className="absolute bottom-0 left-1/2 w-1.5 h-1.5 bg-white border border-gray-300 -ml-0.5"></div>
-          <div className="absolute left-0 top-1/2 w-1.5 h-1.5 bg-white border border-gray-300 -mt-0.5"></div>
-          <div className="absolute right-0 top-1/2 w-1.5 h-1.5 bg-white border border-gray-300 -mt-0.5"></div>
-          <div className="absolute top-1/2 left-1/2 w-2 h-2 bg-white border border-gray-400 -ml-1 -mt-1"></div>
-        </div>
-      </div>
 
       {/* Content */}
       <div className="relative z-10">
-        <NavBarUser username={username} />
-
         <div className="container mx-auto px-4 py-6">
           <div className="max-w-2xl mx-auto">
             
@@ -325,10 +261,10 @@ export default function ProfilePage() {
 
                 {/* Action Buttons */}
                 {isEditing ? (
-                  <div className="flex gap-3 mb-4">
+                  <div className="grid grid-cols-2 gap-4 mb-4">
                     <button
                       onClick={handleCancel}
-                      className="flex-1 py-3.5 bg-gray-800 text-white font-bold text-sm border-4 border-black hover:bg-gray-700 transition"
+                      className="py-4 bg-gray-800 text-white font-bold text-base border-4 border-black hover:bg-gray-700 transition"
                       style={{
                         fontFamily: 'monospace',
                         boxShadow: '4px 4px 0 rgba(0, 0, 0, 0.3)',
@@ -340,7 +276,7 @@ export default function ProfilePage() {
                     <button
                       onClick={handleSave}
                       disabled={isLoading}
-                      className="flex-1 py-3.5 font-bold text-sm text-white border-4 border-black disabled:opacity-50 hover:opacity-90 transition"
+                      className="py-4 font-bold text-base text-white border-4 border-black disabled:opacity-50 hover:opacity-90 transition"
                       style={{
                         background: 'linear-gradient(to right, #6fa85e, #8bc273)',
                         fontFamily: 'monospace',
@@ -354,8 +290,8 @@ export default function ProfilePage() {
                 ) : (
                   <div className="grid grid-cols-3 gap-3">
                     <button
-                      onClick={() => router.back()}
-                      className="py-3.5 bg-gray-800 text-white font-bold text-xs border-4 border-black hover:bg-gray-700 transition"
+                      onClick={handleBack}
+                      className="py-4 bg-gray-800 text-white font-bold text-sm border-4 border-black hover:bg-gray-700 transition"
                       style={{
                         fontFamily: 'monospace',
                         boxShadow: '4px 4px 0 rgba(0, 0, 0, 0.3)',
@@ -366,7 +302,7 @@ export default function ProfilePage() {
                     </button>
                     <button
                       onClick={handleEdit}
-                      className="py-3.5 text-white font-bold text-xs border-4 border-black hover:opacity-90 transition"
+                      className="py-4 text-white font-bold text-sm border-4 border-black hover:opacity-90 transition"
                       style={{
                         background: 'linear-gradient(to right, #6fa85e, #8bc273)',
                         fontFamily: 'monospace',
@@ -378,8 +314,9 @@ export default function ProfilePage() {
                     </button>
                     <button
                       onClick={() => setShowLogoutModal(true)}
-                      className="py-3.5 bg-rose-400 text-white font-bold text-xs border-4 border-black hover:bg-rose-500 transition"
+                      className="py-4 text-white font-bold text-sm border-4 border-black transition"
                       style={{
+                        background: '#fb7185',
                         fontFamily: 'monospace',
                         boxShadow: '4px 4px 0 rgba(0, 0, 0, 0.3)',
                         textShadow: '2px 2px 0 rgba(0, 0, 0, 0.5)',
@@ -427,8 +364,16 @@ function InputField({ label, value, onChange, unit, isEditing, type = 'text' }: 
             type={type}
             value={value}
             onChange={(e) => onChange(e.target.value)}
-            className="w-full bg-transparent outline-none text-sm text-gray-800"
-            style={{ fontFamily: 'monospace' }}
+            className="w-full bg-transparent text-sm text-gray-800"
+            style={{ 
+              fontFamily: 'monospace', 
+              outline: 'none', 
+              border: 'none', 
+              boxShadow: 'none',
+              appearance: 'none',
+              WebkitAppearance: 'none',
+              MozAppearance: 'none'
+            }}
           />
         ) : (
           <span className="text-sm text-gray-800" style={{ fontFamily: 'monospace' }}>
@@ -458,8 +403,16 @@ function DropdownField({ label, value, onChange, options, isEditing }: any) {
           <select
             value={value}
             onChange={(e) => onChange(e.target.value)}
-            className="w-full bg-transparent outline-none text-sm text-gray-800"
-            style={{ fontFamily: 'monospace' }}
+            className="w-full bg-transparent text-sm text-gray-800"
+            style={{ 
+              fontFamily: 'monospace', 
+              outline: 'none', 
+              border: 'none', 
+              boxShadow: 'none',
+              appearance: 'none',
+              WebkitAppearance: 'none',
+              MozAppearance: 'none'
+            }}
           >
             {options.map((opt: string) => (
               <option key={opt} value={opt}>{opt}</option>
@@ -563,7 +516,6 @@ function ErrorModal({ message, onClose }: { message: string; onClose: () => void
         </div>
 
         <div className="p-8 text-center">
-          {/* Error Icon */}
           <div className="flex justify-center mb-6">
             <div className="w-20 h-20 bg-red-600 border-4 border-black flex items-center justify-center">
               <div className="text-6xl text-white font-bold">!</div>
@@ -604,12 +556,12 @@ function LogoutModal({ onCancel, onConfirm }: { onCancel: () => void; onConfirm:
         className="bg-white relative max-w-md w-full"
         style={{ border: '8px solid black', boxShadow: '8px 8px 0 rgba(0, 0, 0, 0.5)' }}
       >
-        <div className="absolute top-0 left-0 w-4 h-4 bg-pink-300"></div>
-        <div className="absolute top-0 right-0 w-4 h-4 bg-pink-300"></div>
-        <div className="absolute bottom-0 left-0 w-4 h-4 bg-pink-300"></div>
-        <div className="absolute bottom-0 right-0 w-4 h-4 bg-pink-300"></div>
+        <div className="absolute top-0 left-0 w-4 h-4 bg-[#ff85c1]"></div>
+        <div className="absolute top-0 right-0 w-4 h-4 bg-[#ff85c1]"></div>
+        <div className="absolute bottom-0 left-0 w-4 h-4 bg-[#ff85c1]"></div>
+        <div className="absolute bottom-0 right-0 w-4 h-4 bg-[#ff85c1]"></div>
 
-        <div className="py-3 border-b-4 border-black bg-rose-400">
+        <div className="py-3 border-b-4 border-black" style={{ background: '#f6627bff' }}>
           <h3 
             className="text-xl font-bold text-white text-center"
             style={{ fontFamily: 'monospace', textShadow: '2px 2px 0 rgba(0, 0, 0, 0.5)' }}
@@ -621,7 +573,7 @@ function LogoutModal({ onCancel, onConfirm }: { onCancel: () => void; onConfirm:
         <div className="p-8 text-center">
           {/* Warning Icon */}
           <div className="flex justify-center mb-6">
-            <div className="w-20 h-20 bg-rose-400 border-4 border-black flex items-center justify-center">
+            <div className="w-20 h-20 border-4 border-black flex items-center justify-center" style={{ background: '#f6627bff' }}>
               <div className="text-6xl text-white font-bold">?</div>
             </div>
           </div>
@@ -631,12 +583,13 @@ function LogoutModal({ onCancel, onConfirm }: { onCancel: () => void; onConfirm:
           </p>
 
           <div className="flex justify-center gap-1.5 mb-6">
-            <div className="w-2 h-2 bg-pink-400 border border-black"></div>
-            <div className="w-2 h-2 bg-pink-400 border border-black"></div>
-            <div className="w-2 h-2 bg-pink-400 border border-black"></div>
+            <div className="w-2 h-2 border border-black" style={{ background: '#f6627bff' }}></div>
+            <div className="w-2 h-2 border border-black" style={{ background: '#f6627bff' }}></div>
+            <div className="w-2 h-2 border border-black" style={{ background: '#f6627bff' }}></div>
           </div>
 
-          <div className="flex gap-3">
+          <div className="flex justify-center gap-4 text-center">
+
             <button
               onClick={onCancel}
               className="flex-1 py-3.5 bg-gray-800 text-white font-bold text-sm border-4 border-black hover:bg-gray-700 transition"
@@ -650,8 +603,9 @@ function LogoutModal({ onCancel, onConfirm }: { onCancel: () => void; onConfirm:
             </button>
             <button
               onClick={onConfirm}
-              className="flex-1 py-3.5 bg-rose-400 text-white font-bold text-sm border-4 border-black hover:bg-rose-500 transition"
+              className="flex-1 py-3.5 text-white font-bold text-sm border-4 border-black transition"
               style={{
+                background: '#f6627bff',
                 fontFamily: 'monospace',
                 boxShadow: '4px 4px 0 rgba(0, 0, 0, 0.3)',
                 textShadow: '2px 2px 0 rgba(0, 0, 0, 0.5)',

@@ -7,6 +7,7 @@ import {
   updateConsumedCalories,
   getCalorieStatus,
 } from "../controllers/daily.controller";
+import { getDailyMacros } from "../controllers/daily.controller";
 
 const router = Router();
 
@@ -21,5 +22,6 @@ router.post("/calculate-bmr/:userId", validateToken, calculateBMR);
 router.post("/calculate-target/:userId", validateToken, calculateTargetCalories);
 router.post("/update-consumed/:userId", validateToken, updateConsumedCalories);
 router.get("/status/:userId", validateToken, getCalorieStatus);
+router.get("/macros/:userId", validateToken, getDailyMacros);
 
 export default router;
