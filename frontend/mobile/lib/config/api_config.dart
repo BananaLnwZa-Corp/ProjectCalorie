@@ -6,7 +6,7 @@ class ApiConfig {
 
   // Flask ML Server (port 5000)
   static const String _flaskUrl = 'http://localhost:5000';
-
+  
   // Node.js Backend Endpoints
   static String get baseUrl => _baseUrl;
   static String get authUrl => '$_baseUrl/api/auth';
